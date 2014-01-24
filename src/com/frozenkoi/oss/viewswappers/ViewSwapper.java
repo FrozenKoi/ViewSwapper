@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.widget;
+package com.frozenkoi.oss.viewswappers;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -24,34 +24,34 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
- * {@link ViewAnimator} that switches between two views, and has a factory
+ * {@link ViewAnimatorViaProperties} that switches between two views, and has a factory
  * from which these views are created.  You can either use the factory to
- * create the views, or add them yourself.  A ViewSwitcher can only have two
+ * create the views, or add them yourself.  A ViewSwapper can only have two
  * child views, of which only one is shown at a time.
  */
-public class ViewSwitcher extends ViewAnimator {
+public class ViewSwapper extends ViewAnimatorViaProperties {
     /**
      * The factory used to create the two children.
      */
     ViewFactory mFactory;
 
     /**
-     * Creates a new empty ViewSwitcher.
+     * Creates a new empty ViewSwapper.
      *
      * @param context the application's environment
      */
-    public ViewSwitcher(Context context) {
+    public ViewSwapper(Context context) {
         super(context);
     }
 
     /**
-     * Creates a new empty ViewSwitcher for the given context and with the
+     * Creates a new empty ViewSwapper for the given context and with the
      * specified set attributes.
      *
      * @param context the application environment
      * @param attrs a collection of attributes
      */
-    public ViewSwitcher(Context context, AttributeSet attrs) {
+    public ViewSwapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -63,7 +63,7 @@ public class ViewSwitcher extends ViewAnimator {
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         if (getChildCount() >= 2) {
-            throw new IllegalStateException("Can't add more than 2 views to a ViewSwitcher");
+            throw new IllegalStateException("Can't add more than 2 views to a ViewSwapper");
         }
         super.addView(child, index, params);
     }
@@ -71,13 +71,13 @@ public class ViewSwitcher extends ViewAnimator {
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
-        event.setClassName(ViewSwitcher.class.getName());
+        event.setClassName(ViewSwapper.class.getName());
     }
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(ViewSwitcher.class.getName());
+        info.setClassName(ViewSwapper.class.getName());
     }
 
     /**
@@ -102,7 +102,7 @@ public class ViewSwitcher extends ViewAnimator {
 
     /**
      * Sets the factory used to create the two views between which the
-     * ViewSwitcher will flip. Instead of using a factory, you can call
+     * ViewSwapper will flip. Instead of using a factory, you can call
      * {@link #addView(android.view.View, int, android.view.ViewGroup.LayoutParams)}
      * twice.
      *
@@ -115,7 +115,7 @@ public class ViewSwitcher extends ViewAnimator {
     }
 
     /**
-     * Reset the ViewSwitcher to hide all of the existing views and to make it
+     * Reset the ViewSwapper to hide all of the existing views and to make it
      * think that the first time animation has not yet played.
      */
     public void reset() {
@@ -132,7 +132,7 @@ public class ViewSwitcher extends ViewAnimator {
     }
 
     /**
-     * Creates views in a ViewSwitcher.
+     * Creates views in a ViewSwapper.
      */
     public interface ViewFactory {
         /**

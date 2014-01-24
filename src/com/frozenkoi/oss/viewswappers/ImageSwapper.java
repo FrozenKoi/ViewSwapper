@@ -24,7 +24,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 
-public class ImageSwitcher extends ViewSwitcher
+public class ImageSwitcher extends ViewSwapper
 {
     public ImageSwitcher(Context context)
     {

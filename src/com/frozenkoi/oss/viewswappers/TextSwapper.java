@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.widget;
+package com.frozenkoi.oss.viewswappers;
 
 
 import android.content.Context;
@@ -28,28 +28,28 @@ import android.view.accessibility.AccessibilityNodeInfo;
  * Specialized {@link android.widget.ViewSwitcher} that contains
  * only children of type {@link android.widget.TextView}.
  *
- * A TextSwitcher is useful to animate a label on screen. Whenever
- * {@link #setText(CharSequence)} is called, TextSwitcher animates the current text
+ * A TextSwapper is useful to animate a label on screen. Whenever
+ * {@link #setText(CharSequence)} is called, TextSwapper animates the current text
  * out and animates the new text in. 
  */
-public class TextSwitcher extends ViewSwitcher {
+public class TextSwapper extends ViewSwapper {
     /**
-     * Creates a new empty TextSwitcher.
+     * Creates a new empty TextSwapper.
      *
      * @param context the application's environment
      */
-    public TextSwitcher(Context context) {
+    public TextSwapper(Context context) {
         super(context);
     }
 
     /**
-     * Creates a new empty TextSwitcher for the given context and with the
+     * Creates a new empty TextSwapper for the given context and with the
      * specified set attributes.
      *
      * @param context the application environment
      * @param attrs a collection of attributes
      */
-    public TextSwitcher(Context context, AttributeSet attrs) {
+    public TextSwapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -63,7 +63,7 @@ public class TextSwitcher extends ViewSwitcher {
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         if (!(child instanceof TextView)) {
             throw new IllegalArgumentException(
-                    "TextSwitcher children must be instances of TextView");
+                    "TextSwapper children must be instances of TextView");
         }
 
         super.addView(child, index, params);
@@ -94,12 +94,12 @@ public class TextSwitcher extends ViewSwitcher {
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
-        event.setClassName(TextSwitcher.class.getName());
+        event.setClassName(TextSwapper.class.getName());
     }
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(TextSwitcher.class.getName());
+        info.setClassName(TextSwapper.class.getName());
     }
 }
