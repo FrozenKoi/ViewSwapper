@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package android.widget;
+package com.frozenkoi.oss.viewswappers;
 
+import java.util.WeakHashMap;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -24,8 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 /**
  * Base class for a {@link FrameLayout} container that will perform animations
@@ -35,36 +36,42 @@ import android.view.animation.AnimationUtils;
  * @attr ref android.R.styleable#ViewAnimator_outAnimation
  * @attr ref android.R.styleable#ViewAnimator_animateFirstView
  */
-public class ViewAnimator extends FrameLayout {
+public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
 
     int mWhichChild = 0;
     boolean mFirstTime = true;
 
     boolean mAnimateFirstTime = true;
 
-    Animation mInAnimation;
-    Animation mOutAnimation;
+    Animator mInAnimator;
+    Animator mOutAnimator;
 
-    public ViewAnimator(Context context) {
+    private WeakHashMap<View, Animator> mCurrentAnimators=new WeakHashMap<View, Animator>();
+
+    public ViewAnimatorViaProperties(Context context) {
         super(context);
         initViewAnimator(context, null);
     }
 
-    public ViewAnimator(Context context, AttributeSet attrs) {
+    public ViewAnimatorViaProperties(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ViewAnimator);
-        int resource = a.getResourceId(com.android.internal.R.styleable.ViewAnimator_inAnimation, 0);
+        //[dk]  //TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ViewAnimator);
+        //[dk]  //int resource = a.getResourceId(com.android.internal.R.styleable.ViewAnimator_inAnimation, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewAnimatorViaProperties);
+        int resource = a.getResourceId(R.styleable.ViewAnimatorViaProperties_inAnimator, 0);
         if (resource > 0) {
             setInAnimation(context, resource);
         }
 
-        resource = a.getResourceId(com.android.internal.R.styleable.ViewAnimator_outAnimation, 0);
+        //[dk]  //resource = a.getResourceId(com.android.internal.R.styleable.ViewAnimator_outAnimation, 0);
+        resource = a.getResourceId(R.styleable.ViewAnimatorViaProperties_outAnimator, 0);
         if (resource > 0) {
             setOutAnimation(context, resource);
         }
 
-        boolean flag = a.getBoolean(com.android.internal.R.styleable.ViewAnimator_animateFirstView, true);
+        //[dk]  //boolean flag = a.getBoolean(com.android.internal.R.styleable.ViewAnimator_animateFirstView, true);
+        boolean flag = a.getBoolean(R.styleable.ViewAnimatorViaProperties_animateFirstView, true);
         setAnimateFirstView(flag);
 
         a.recycle();
@@ -79,18 +86,20 @@ public class ViewAnimator extends FrameLayout {
     private void initViewAnimator(Context context, AttributeSet attrs) {
         if (attrs == null) {
             // For compatibility, always measure children when undefined.
-            mMeasureAllChildren = true;
+            setMeasureAllChildren(true);    //[dk]  //mMeasureAllChildren = true;
             return;
         }
 
-        // For compatibility, default to measure children, but allow XML
-        // attribute to override.
-        final TypedArray a = context.obtainStyledAttributes(attrs,
-                com.android.internal.R.styleable.FrameLayout);
-        final boolean measureAllChildren = a.getBoolean(
-                com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
-        setMeasureAllChildren(measureAllChildren);
-        a.recycle();
+        //since this inherits FrameLayout, shouldn't we let base class do this with it's own attributes?
+        //Oh My Chtulu! no we can't since the default is different
+//        // For compatibility, default to measure children, but allow XML
+//        // attribute to override.
+//        final TypedArray a = context.obtainStyledAttributes(attrs,
+//                com.android.internal.R.styleable.FrameLayout);
+//        final boolean measureAllChildren = a.getBoolean(
+//                com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
+//        setMeasureAllChildren(measureAllChildren);
+//        a.recycle();
     }
 
     /**
@@ -98,7 +107,7 @@ public class ViewAnimator extends FrameLayout {
      *
      * @param whichChild the index of the child view to display
      */
-    @android.view.RemotableViewMethod
+    //[dk]  //@android.view.RemotableViewMethod //TODO: figure out what to do with this annotation
     public void setDisplayedChild(int whichChild) {
         mWhichChild = whichChild;
         if (whichChild >= getChildCount()) {
@@ -125,7 +134,7 @@ public class ViewAnimator extends FrameLayout {
     /**
      * Manually shows the next child.
      */
-    @android.view.RemotableViewMethod
+    //[dk]  //@android.view.RemotableViewMethod //TODO: figure out what to do with this annotation
     public void showNext() {
         setDisplayedChild(mWhichChild + 1);
     }
@@ -133,7 +142,7 @@ public class ViewAnimator extends FrameLayout {
     /**
      * Manually shows the previous child.
      */
-    @android.view.RemotableViewMethod
+    //[dk]  //@android.view.RemotableViewMethod //TODO: figure out what to do with this annotation
     public void showPrevious() {
         setDisplayedChild(mWhichChild - 1);
     }
@@ -153,16 +162,25 @@ public class ViewAnimator extends FrameLayout {
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
             if (i == childIndex) {
-                if (animate && mInAnimation != null) {
-                    child.startAnimation(mInAnimation);
+                if (animate && mInAnimator != null) {
+                    //[dk]  //child.startAnimation(mInAnimator);
+                    final Animator inAnimator = mInAnimator.clone();
+                    inAnimator.setTarget(child);
+                    inAnimator.start();
+                    mCurrentAnimators.put(child, inAnimator);   //keep track of what animator is being used for this view
                 }
                 child.setVisibility(View.VISIBLE);
                 mFirstTime = false;
             } else {
-                if (animate && mOutAnimation != null && child.getVisibility() == View.VISIBLE) {
-                    child.startAnimation(mOutAnimation);
-                } else if (child.getAnimation() == mInAnimation)
-                    child.clearAnimation();
+                if (animate && mOutAnimator != null && child.getVisibility() == View.VISIBLE) {
+                    //[dk]  //child.startAnimation(mOutAnimator);
+                    final Animator outAnimator = mOutAnimator.clone();
+                    outAnimator.setTarget(child);
+                    outAnimator.start();
+                    mCurrentAnimators.put(child, outAnimator);   //keep track of what animator is being used for this view
+                //} else if (child.getAnimation() == mInAnimator) //TODO: how to find out if the animator is the same as the one running
+                } else if (mCurrentAnimators.get(child) == mInAnimator) //this will fail. Since the child's animator is a clone of mInAnimator
+                    //[dk]  //child.clearAnimation(); //TODO: stop animation. Since this is for tween, don't do it. Check if we need it for property animation
                 child.setVisibility(View.GONE);
             }
         }
@@ -262,8 +280,8 @@ public class ViewAnimator extends FrameLayout {
      * @see #setInAnimation(android.view.animation.Animation)
      * @see #setInAnimation(android.content.Context, int)
      */
-    public Animation getInAnimation() {
-        return mInAnimation;
+    public Animator getInAnimation() {
+        return mInAnimator;
     }
 
     /**
@@ -274,8 +292,8 @@ public class ViewAnimator extends FrameLayout {
      * @see #getInAnimation()
      * @see #setInAnimation(android.content.Context, int)
      */
-    public void setInAnimation(Animation inAnimation) {
-        mInAnimation = inAnimation;
+    public void setInAnimation(Animator inAnimation) {
+        mInAnimator = inAnimation;
     }
 
     /**
@@ -286,8 +304,8 @@ public class ViewAnimator extends FrameLayout {
      * @see #setOutAnimation(android.view.animation.Animation)
      * @see #setOutAnimation(android.content.Context, int)
      */
-    public Animation getOutAnimation() {
-        return mOutAnimation;
+    public Animator getOutAnimation() {
+        return mOutAnimator;
     }
 
     /**
@@ -298,8 +316,8 @@ public class ViewAnimator extends FrameLayout {
      * @see #getOutAnimation()
      * @see #setOutAnimation(android.content.Context, int)
      */
-    public void setOutAnimation(Animation outAnimation) {
-        mOutAnimation = outAnimation;
+    public void setOutAnimation(Animator outAnimator) {
+        mOutAnimator = outAnimator;
     }
 
     /**
@@ -312,7 +330,9 @@ public class ViewAnimator extends FrameLayout {
      * @see #setInAnimation(android.view.animation.Animation)
      */
     public void setInAnimation(Context context, int resourceID) {
-        setInAnimation(AnimationUtils.loadAnimation(context, resourceID));
+        //[dk]  //setInAnimation(AnimationUtils.loadAnimation(context, resourceID));
+        final Animator inAnimator = AnimatorInflater.loadAnimator(context, resourceID);
+        setInAnimation(inAnimator);
     }
 
     /**
@@ -325,7 +345,9 @@ public class ViewAnimator extends FrameLayout {
      * @see #setOutAnimation(android.view.animation.Animation)
      */
     public void setOutAnimation(Context context, int resourceID) {
-        setOutAnimation(AnimationUtils.loadAnimation(context, resourceID));
+        //[dk]  //setOutAnimation(AnimationUtils.loadAnimation(context, resourceID));
+        final Animator outAnimator = AnimatorInflater.loadAnimator(context, resourceID);
+        setOutAnimation(outAnimator);
     }
 
     /**
@@ -360,12 +382,12 @@ public class ViewAnimator extends FrameLayout {
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
-        event.setClassName(ViewAnimator.class.getName());
+        event.setClassName(ViewAnimatorViaProperties.class.getName());
     }
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(ViewAnimator.class.getName());
+        info.setClassName(ViewAnimatorViaProperties.class.getName());
     }
 }

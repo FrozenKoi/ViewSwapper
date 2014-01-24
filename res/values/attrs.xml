@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewAnimatorViaProperties">
+        <attr name="inAnimator" format="reference" />
+        <attr name="outAnimator" format="reference" />
+        <attr name="animateFirstView" format="boolean" />
+    </declare-styleable>
+</resources>
