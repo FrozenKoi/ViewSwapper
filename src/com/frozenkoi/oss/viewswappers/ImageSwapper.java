@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.ImageView;
 
 
 public class ImageSwapper extends ViewSwapper
