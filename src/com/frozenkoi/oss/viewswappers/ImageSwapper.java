@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.widget;
+package com.frozenkoi.oss.viewswappers;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -24,14 +24,14 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 
-public class ImageSwitcher extends ViewSwapper
+public class ImageSwapper extends ViewSwapper
 {
-    public ImageSwitcher(Context context)
+    public ImageSwapper(Context context)
     {
         super(context);
     }
     
-    public ImageSwitcher(Context context, AttributeSet attrs) {
+    public ImageSwapper(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -59,12 +59,12 @@ public class ImageSwitcher extends ViewSwapper
     @Override
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
         super.onInitializeAccessibilityEvent(event);
-        event.setClassName(ImageSwitcher.class.getName());
+        event.setClassName(ImageSwapper.class.getName());
     }
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(ImageSwitcher.class.getName());
+        info.setClassName(ImageSwapper.class.getName());
     }
 }
