@@ -23,6 +23,7 @@ import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -45,6 +46,8 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
 
     Animator mInAnimator;
     Animator mOutAnimator;
+
+    private final String TAG = "ViewAnimatorViaProperties";
 
     private WeakHashMap<View, Animator> mCurrentAnimators=new WeakHashMap<View, Animator>();
 
@@ -165,6 +168,24 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
                 if (animate && mInAnimator != null) {
                     //[dk]  //child.startAnimation(mInAnimator);
                     final Animator inAnimator = mInAnimator.clone();
+                    inAnimator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            Log.d(TAG, "swapper  in start "+animation);
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+                            Log.d(TAG, "swapper  in repeat "+animation);
+                        }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            Log.d(TAG, "swapper  in end "+animation);
+                        }
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            Log.d(TAG, "swapper  in cancel "+animation);
+                        }
+                    });
                     inAnimator.setTarget(child);
                     inAnimator.start();
                     mCurrentAnimators.put(child, inAnimator);   //keep track of what animator is being used for this view
