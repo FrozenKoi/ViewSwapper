@@ -95,14 +95,17 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
 
         //since this inherits FrameLayout, shouldn't we let base class do this with it's own attributes?
         //Oh My Chtulu! no we can't since the default is different
-//        // For compatibility, default to measure children, but allow XML
-//        // attribute to override.
-//        final TypedArray a = context.obtainStyledAttributes(attrs,
-//                com.android.internal.R.styleable.FrameLayout);
-//        final boolean measureAllChildren = a.getBoolean(
-//                com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
-//        setMeasureAllChildren(measureAllChildren);
-//        a.recycle();
+
+        // For compatibility, default to measure children, but allow XML
+        // attribute to override.
+        final TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.ViewAnimatorViaProperties);
+              //com.android.internal.R.styleable.FrameLayout);
+        final boolean measureAllChildren = a.getBoolean(
+                R.styleable.ViewAnimatorViaProperties_measureAllChildren, true);
+              //com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
+        setMeasureAllChildren(measureAllChildren);
+        a.recycle();
     }
 
     /**
@@ -168,24 +171,6 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
                 if (animate && mInAnimator != null) {
                     //[dk]  //child.startAnimation(mInAnimator);
                     final Animator inAnimator = mInAnimator.clone();
-                    inAnimator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            Log.d(TAG, "swapper  in start "+animation);
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-                            Log.d(TAG, "swapper  in repeat "+animation);
-                        }
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            Log.d(TAG, "swapper  in end "+animation);
-                        }
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-                            Log.d(TAG, "swapper  in cancel "+animation);
-                        }
-                    });
                     inAnimator.setTarget(child);
                     inAnimator.start();
                     mCurrentAnimators.put(child, inAnimator);   //keep track of what animator is being used for this view
@@ -315,6 +300,24 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      */
     public void setInAnimation(Animator inAnimation) {
         mInAnimator = inAnimation;
+        mInAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                Log.d(TAG, "swapper  in start "+animation);
+            }
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                Log.d(TAG, "swapper  in repeat "+animation);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.d(TAG, "swapper  in end "+animation);
+            }
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                Log.d(TAG, "swapper  in cancel "+animation);
+            }
+        });
     }
 
     /**
@@ -339,6 +342,24 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      */
     public void setOutAnimation(Animator outAnimator) {
         mOutAnimator = outAnimator;
+        mOutAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                Log.d(TAG, "swapper out start "+animation);
+            }
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                Log.d(TAG, "swapper out repeat "+animation);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.d(TAG, "swapper out end "+animation);
+            }
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                Log.d(TAG, "swapper out cancel "+animation);
+            }
+        });
     }
 
     /**

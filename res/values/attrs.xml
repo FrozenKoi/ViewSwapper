@@ -4,5 +4,6 @@
         <attr name="inAnimator" format="reference" />
         <attr name="outAnimator" format="reference" />
         <attr name="animateFirstView" format="boolean" />
+        <attr name="measureAllChildren" format="boolean" />
     </declare-styleable>
 </resources>
