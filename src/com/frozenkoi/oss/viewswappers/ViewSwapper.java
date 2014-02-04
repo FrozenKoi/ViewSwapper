@@ -16,6 +16,7 @@
 
 package com.frozenkoi.oss.viewswappers;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -123,10 +124,18 @@ public class ViewSwapper extends ViewAnimatorViaProperties {
         View v;
         v = getChildAt(0);
         if (v != null) {
+            Animator vA = mCurrentAnimators.get(v);
+            if (vA != null) {
+                vA.end();
+            }
             v.setVisibility(View.GONE);
         }
         v = getChildAt(1);
         if (v != null) {
+            Animator vA = mCurrentAnimators.get(v);
+            if (vA != null) {
+                vA.end();
+            }
             v.setVisibility(View.GONE);
         }
     }

@@ -49,7 +49,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
 
     private final String TAG = "ViewAnimatorViaProperties";
 
-    private WeakHashMap<View, Animator> mCurrentAnimators=new WeakHashMap<View, Animator>();
+    protected WeakHashMap<View, Animator> mCurrentAnimators=new WeakHashMap<View, Animator>();
 
     public ViewAnimatorViaProperties(Context context) {
         super(context);
@@ -170,10 +170,19 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
             if (i == childIndex) {
                 if (animate && mInAnimator != null) {
                     //[dk]  //child.startAnimation(mInAnimator);
+                    //TODO: consider canceling previous animation stored in mCurrentAnimators
                     final Animator inAnimator = mInAnimator.clone();
                     inAnimator.setTarget(child);
                     inAnimator.start();
                     mCurrentAnimators.put(child, inAnimator);   //keep track of what animator is being used for this view
+                }
+                else if (mInAnimator != null)
+                {
+                    final Animator inAnimator = mInAnimator.clone();
+                    inAnimator.setTarget(child);
+                    inAnimator.start();
+                    mCurrentAnimators.put(child, inAnimator);
+                    inAnimator.end();//we want the view to jump to final position.
                 }
                 child.setVisibility(View.VISIBLE);
                 mFirstTime = false;
