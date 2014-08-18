@@ -312,19 +312,19 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
         mInAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                Log.d(TAG, "swapper  in start "+animation);
+                Log.v(TAG, "swapper  in start "+animation);
             }
             @Override
             public void onAnimationRepeat(Animator animation) {
-                Log.d(TAG, "swapper  in repeat "+animation);
+                Log.v(TAG, "swapper  in repeat "+animation);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
-                Log.d(TAG, "swapper  in end "+animation);
+                Log.v(TAG, "swapper  in end "+animation);
             }
             @Override
             public void onAnimationCancel(Animator animation) {
-                Log.d(TAG, "swapper  in cancel "+animation);
+                Log.v(TAG, "swapper  in cancel "+animation);
             }
         });
     }
@@ -354,19 +354,19 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
         mOutAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                Log.d(TAG, "swapper out start "+animation);
+                Log.v(TAG, "swapper out start "+animation);
             }
             @Override
             public void onAnimationRepeat(Animator animation) {
-                Log.d(TAG, "swapper out repeat "+animation);
+                Log.v(TAG, "swapper out repeat "+animation);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
-                Log.d(TAG, "swapper out end "+animation);
+                Log.v(TAG, "swapper out end "+animation);
             }
             @Override
             public void onAnimationCancel(Animator animation) {
-                Log.d(TAG, "swapper out cancel "+animation);
+                Log.v(TAG, "swapper out cancel "+animation);
             }
         });
     }
