@@ -30,7 +30,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
- * Base class for a {@link FrameLayout} container that will perform animations
+ * Base class for a {@link android.widget.FrameLayout} container that will perform animations
  * when switching between its views.
  *
  * @attr ref android.R.styleable#ViewAnimator_inAnimation
@@ -292,7 +292,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      *
      * @return An Animation or null if none is set.
      *
-     * @see #setInAnimation(android.view.animation.Animation)
+     * @see #setInAnimation(android.animation.Animator)
      * @see #setInAnimation(android.content.Context, int)
      */
     public Animator getInAnimation() {
@@ -334,7 +334,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      *
      * @return An Animation or null if none is set.
      *
-     * @see #setOutAnimation(android.view.animation.Animation)
+     * @see #setOutAnimation(android.animation.Animator)
      * @see #setOutAnimation(android.content.Context, int)
      */
     public Animator getOutAnimation() {
@@ -344,7 +344,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
     /**
      * Specifies the animation used to animate a View that exit the screen.
      *
-     * @param outAnimation The animation started when a View exit the screen.
+     * @param outAnimator The animation started when a View exit the screen.
      *
      * @see #getOutAnimation()
      * @see #setOutAnimation(android.content.Context, int)
@@ -378,7 +378,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      * @param resourceID The resource id of the animation.
      *
      * @see #getInAnimation()
-     * @see #setInAnimation(android.view.animation.Animation)
+     * @see #setInAnimation(android.animation.Animator)
      */
     public void setInAnimation(Context context, int resourceID) {
         //[dk]  //setInAnimation(AnimationUtils.loadAnimation(context, resourceID));
@@ -393,7 +393,7 @@ public class ViewAnimatorViaProperties extends android.widget.FrameLayout {
      * @param resourceID The resource id of the animation.
      *
      * @see #getOutAnimation()
-     * @see #setOutAnimation(android.view.animation.Animation)
+     * @see #setOutAnimation(android.animation.Animator)
      */
     public void setOutAnimation(Context context, int resourceID) {
         //[dk]  //setOutAnimation(AnimationUtils.loadAnimation(context, resourceID));
